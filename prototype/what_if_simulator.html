@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What-If Simulator | Low-Carbon Energy Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --accent: #1abc9c;
+            --bg: #f8faf8;
+            --text-main: #1b2631;
+            --text-muted: #5d6d7e;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
+            --card-accent: #f4f6f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(44, 62, 80, 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(26, 188, 156, 0.03) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1rem;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .simulator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        @media (max-width: 850px) {
+            .simulator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .control-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .household-count-display {
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #dce3dc;
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--accent);
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: var(--card-accent);
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(45, 90, 39, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .kpi-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .unit {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .btn-simulate {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(45, 90, 39, 0.2);
+        }
+
+        .btn-simulate:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 90, 39, 0.3);
+        }
+
+        .visual-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .chart-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            height: 350px;
+            position: relative;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header class="branded-header">
+            <h1>What-If Energy Impact Simulator</h1>
+            <p class="subtitle" style="color: var(--text-main); font-weight: 500;">Estimating potential carbon reduction
+                through efficiency scaling</p>
+        </header>
+
+        <div class="glass-panel">
+            <div class="simulator-grid">
+                <!-- UI Elements: Controls and KPIs -->
+                <div class="control-section">
+                    <div class="control-group">
+                        <label for="householdSlider">
+                            Number of Households
+                            <span class="household-count-display" id="countDisplay">10</span>
+                        </label>
+                        <input type="range" id="householdSlider" min="1" max="1000" value="10">
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Average Efficient Power</div>
+                            <div class="kpi-value" id="valAvgPower">0.00 <span class="unit">kW</span></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Estimated Monthly Energy</div>
+                            <div class="kpi-value" id="valEnergy">0.00 <span class="unit">kWh</span></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Estimated Monthly CO₂ Reduction</div>
+                            <div class="kpi-value" id="valCO2">0.00 <span class="unit">kg</span></div>
+                        </div>
+                    </div>
+
+                    <button class="btn-simulate" id="simulateBtn">Simulate Impact</button>
+
+                    <a href="../index.html#dashboard" class="back-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Return to Intelligent Dashboard
+                    </a>
+                </div>
+
+                <!-- Visual Output Section -->
+                <div class="visual-section">
+                    <div class="chart-box">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; padding: 0 10px;">
+                        <p>This simulation demonstrates the scalability of identified low-carbon patterns. By adopting
+                            high-efficiency usage cycles across residential blocks, we can achieve significant
+                            industrial-scale emission reductions without sacrificing essential utility.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Sustainability Decision-Support Module | Built for Academic & Evaluation Purposes
+        </div>
+    </div>
+
+    <!-- Integration Logic -->
+    <script src="../logic/what_if_simulator.js"></script>
+    <script>
+        let impactChart;
+
+        async function init() {
+            // Initialize from CSV data source
+            await window.SimulatorLogic.initializeBaseline();
+
+            setupChart();
+            runSimulation();
+        }
+
+        function setupChart() {
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            impactChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Monthly CO₂ Reduction'],
+                    datasets: [{
+                        label: 'Reduction (kg)',
+                        data: [0],
+                        backgroundColor: '#1abc9c',
+                        borderRadius: 12,
+                        barThickness: 60
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `Reduction: ${context.raw.toFixed(2)} kg`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'CO₂ Impact (kg)', color: '#4a5a4a' },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: { display: false }
+                    }
+                }
+            });
+        }
+
+        function runSimulation() {
+            const households = parseInt(document.getElementById('householdSlider').value);
+            document.getElementById('countDisplay').innerText = households;
+
+            // Core calculation logic from logic/what_if_simulator.js
+            const results = window.SimulatorLogic.calculateImpact(households);
+
+            // Update KPI Cards with 2-decimal precision
+            document.getElementById('valAvgPower').innerHTML = `${results.avgPower.toFixed(2)} <span class="unit">kW</span>`;
+            document.getElementById('valEnergy').innerHTML = `${results.totalEnergy.toFixed(2)} <span class="unit">kWh</span>`;
+            document.getElementById('valCO2').innerHTML = `${results.co2Reduction.toFixed(2)} <span class="unit">kg</span>`;
+
+            // Update Visualization
+            if (impactChart) {
+                impactChart.data.datasets[0].data = [results.co2Reduction];
+                impactChart.update();
+            }
+        }
+
+        // Event Listeners for immediate feedback
+        document.getElementById('householdSlider').addEventListener('input', runSimulation);
+        document.getElementById('simulateBtn').addEventListener('click', () => {
+            // Visual feedback for intentional simulation
+            const panel = document.querySelector('.glass-panel');
+            panel.style.transition = 'opacity 0.1s ease';
+            panel.style.opacity = '0.7';
+            setTimeout(() => {
+                runSimulation();
+                panel.style.opacity = '1';
+            }, 100);
+        });
+
+        // Initialize Module
+        init();
+    </script>
+</body>
+
+</html>

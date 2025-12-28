@@ -1,0 +1,17 @@
+# Exclude large or unnecessary files from deployment
+# Prevent 100MB limit errors on Vercel
+
+# Data files
+household.csv
+*.csv
+
+# Scripts and local tooling not needed at runtime
+*.py
+
+# Local and Vercel metadata
+.vercel
+.git
+.gitignore
+
+# Dependencies (if added later)
+node_modules

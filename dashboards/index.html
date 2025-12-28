@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Low-Carbon Efficient Energy Usage Dashboard – 2025</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="title-section">
+                <a href="../landing.html"
+                    style="text-decoration: none; font-size: 0.9rem; color: var(--primary-color); font-weight: 600; display: block; margin-bottom: 10px;">←
+                    Back to Intelligence Overview</a>
+                <h1>Low-Carbon Efficient Energy Usage Dashboard – 2025</h1>
+                <p>Top 10 Most Efficient Electricity Usage Patterns</p>
+            </div>
+            <div class="slicer-section">
+                <div class="slicer">
+                    <a href="../prototype/action_recommendations.html" class="btn-recommendations"
+                        style="background: var(--primary-color); color: white; text-decoration: none; padding: 10px 20px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; margin-right: 20px; box-shadow: 0 4px 10px rgba(26, 188, 156, 0.2); transition: all 0.3s ease;">
+                        Action Recommendations
+                    </a>
+                    <label for="date-range">Date Filter (Range)</label>
+                    <input type="date" id="start-date" value="2025-08-12">
+                    <span>to</span>
+                    <input type="date" id="end-date" value="2025-08-28">
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- KPI Cards -->
+            <div class="kpi-container">
+                <div class="kpi-card" id="min-power-kpi">
+                    <h3>Min Global Active Power</h3>
+                    <div class="value">0.076 <small>kW</small></div>
+                    <div class="trend">Lowest Recorded</div>
+                </div>
+                <div class="kpi-card" id="avg-power-kpi">
+                    <h3>Avg Global Active Power</h3>
+                    <div class="value">0.076 <small>kW</small></div>
+                    <div class="trend">Highly Efficient</div>
+                </div>
+                <div class="kpi-card" id="avg-voltage-kpi">
+                    <h3>Average Voltage</h3>
+                    <div class="value">235.2 <small>V</small></div>
+                    <div class="trend">Stable Grid</div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1 -->
+            <div class="chart-container large">
+                <h2>Efficient Energy Consumption Trend (2025)</h2>
+                <canvas id="lineChart"></canvas>
+            </div>
+
+            <div class="chart-container large">
+                <h2>Top 10 Most Efficient Energy Usage Records</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+
+            <!-- Charts Row 2 -->
+            <div class="chart-container medium">
+                <h2>Voltage vs Power Consumption</h2>
+                <canvas id="scatterPlot"></canvas>
+            </div>
+
+            <div class="chart-container medium">
+                <h2>Sub-Meter Energy Contribution</h2>
+                <canvas id="stackedBarChart"></canvas>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="insights-section">
+                <h2>Sustainability Insights</h2>
+                <p>Lower <strong>Global Active Power</strong> indicates higher energy efficiency and significantly
+                    reduced carbon emissions. By maintaining consumption below 0.1 kW, household energy footprints are
+                    minimized.</p>
+                <p>This dashboard supports <strong>low-carbon awareness</strong> and encourages sustainable energy
+                    practices by highlighting optimal usage patterns observed in the Top 10 records of 2025.</p>
+                <div class="low-carbon-tag">Sustainability Verified</div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Low-Carbon Case Study. Academic Evaluation Copy.</p>
+        </footer>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

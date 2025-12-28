@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Low-Carbon Energy Intelligence | Interactive Prototype</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- HOME VIEW (Entry Hub) -->
+    <div id="view-landing" class="landing-wrapper">
+        <!-- Hero Section -->
+        <section class="hero">
+            <a href="landing.html" class="back-link-entry">
+                ← Back to Entry
+            </a>
+            <h1>Intelligence Overview</h1>
+            <p>Operational node for sustainability modeling and energy efficiency transitions.</p>
+        </section>
+
+        <!-- Value Highlights -->
+        <section class="highlights-grid">
+            <div class="value-card">
+                <h3>Energy Efficiency Insights</h3>
+                <p>Identifying optimal consumption patterns through verified historical datasets.</p>
+            </div>
+            <div class="value-card">
+                <h3>Carbon-Aware Consumption</h3>
+                <p>Prioritizing low-load intervals to minimize environmental footprint.</p>
+            </div>
+            <div class="value-card">
+                <h3>Interactive Visual Analytics</h3>
+                <p>Dynamic exploration of voltage, power, and sub-metering metrics.</p>
+            </div>
+            <div class="value-card">
+                <h3>Appliance-Level Transparency</h3>
+                <p>Granular breakdown of energy contribution across household zones.</p>
+            </div>
+        </section>
+
+
+        <!-- System Modules -->
+        <section id="modules" style="margin-top: 100px;">
+            <h2 class="section-title">System Modules</h2>
+            <div class="modules-grid">
+                <button onclick="switchTab('dashboard')" class="module-tile">
+                    <h4>Open Intelligent Dashboard</h4>
+                    <p>Advanced metrics & efficiency trends</p>
+                </button>
+                <a href="prototype/carbon_calculator.html" class="module-tile">
+                    <h4>Calculate Carbon Footprint</h4>
+                    <p>Personal environmental impact estimation</p>
+                </a>
+                <a href="prototype/what_if_simulator.html" class="module-tile">
+                    <h4>What-If Simulator</h4>
+                    <p>Scalability & carbon impact modeling</p>
+                </a>
+                <a href="reports/efficiency_analysis_2025.html" class="module-tile">
+                    <h4>Efficiency Report</h4>
+                    <p>Strategic sustainability evaluation</p>
+                </a>
+                <a href="prototype/recommendation_ai.html" class="module-tile">
+                    <h4>Recommendation AI</h4>
+                    <p>Logic-based energy reduction strategies.</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- External Intelligence Section -->
+        <section id="external-resources"
+            style="text-align: center; margin-bottom: 80px; padding: 60px 40px; background: rgba(26, 188, 156, 0.03); border-radius: 24px; border: 1px dashed rgba(26, 188, 156, 0.2);">
+            <h2 class="section-title" style="font-size: 1.8rem; margin-bottom: 20px;">Extended Energy Analytics</h2>
+            <p
+                style="color: var(--text-muted); max-width: 700px; margin: 0 auto 30px; line-height: 1.7; font-weight: 300;">
+                Deepen your understanding of national-level energy transitions and climate targets.
+                Access comprehensive datasets and decarbonization pathways via the official <strong>India Climate &
+                    Energy Dashboard (ICED)</strong>.
+            </p>
+            <a href="https://iced.niti.gov.in/" target="_blank" class="btn btn-primary"
+                style="display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px; text-decoration: none; border-radius: 50px;">
+                Know more
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 22 3 22 10"></polyline>
+                    <line x1="10" y1="14" x2="22" y2="2"></line>
+                </svg>
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p><strong>Low-Carbon Energy Intelligence</strong></p>
+            <p>Developed by Team Innovators @2025</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">Academic & prototype use disclaimer. This documentation
+                serves as a conceptual demonstration of sustainability intelligence systems.</p>
+        </footer>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="view-dashboard" class="dashboard-container hidden">
+        <header class="dashboard-header">
+            <div class="title-section">
+                <button onclick="switchTab('landing')"
+                    style="background: none; border: none; padding: 0; font-family: inherit; font-size: 0.9rem; color: var(--primary-color); font-weight: 600; cursor: pointer; display: block; margin-bottom: 10px;">←
+                    Back to Home</button>
+                <h1>Energy Dashboard</h1>
+                <p>Verified High-Efficiency Usage Records</p>
+            </div>
+            <div class="slicer-section"
+                style="display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
+                <a href="prototype/recommendation_ai.html" class="btn btn-primary">Get Sustainable
+                    Recommendations</a>
+                <a href="data/Top_10_Most_Efficient_Energy_Usage_2025_FIXED.csv" download class="btn btn-secondary"
+                    style="font-size: 0.9rem; padding: 12px 24px;">Download Data</a>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+            <div class="kpi-container">
+                <div class="kpi-card" id="min-power-kpi">
+                    <h3>Min Global Active Power</h3>
+                    <div class="value">0.076 <small>kW</small></div>
+                    <div class="trend">Lowest Recorded</div>
+                </div>
+                <div class="kpi-card" id="avg-power-kpi">
+                    <h3>Avg Global Active Power</h3>
+                    <div class="value">0.076 <small>kW</small></div>
+                    <div class="trend">Highly Efficient</div>
+                </div>
+                <div class="kpi-card" id="avg-voltage-kpi">
+                    <h3>Average Voltage</h3>
+                    <div class="value">235.2 <small>V</small></div>
+                    <div class="trend">Stable Grid</div>
+                </div>
+            </div>
+
+            <div class="chart-container large">
+                <h2>Efficient Energy Consumption Trend (2025)</h2>
+                <canvas id="lineChart"></canvas>
+            </div>
+
+            <div class="chart-container large">
+                <h2>Top 10 Most Efficient Energy Usage Records</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+
+            <div class="chart-container medium">
+                <h2>Voltage vs Power Consumption</h2>
+                <canvas id="scatterPlot"></canvas>
+            </div>
+
+            <div class="chart-container medium">
+                <h2>Sub-Meter Energy Contribution</h2>
+                <canvas id="stackedBarChart"></canvas>
+            </div>
+
+            <div class="insights-section">
+                <h2>Sustainability Insights</h2>
+                <p>Lower <strong>Global Active Power</strong> indicates higher energy efficiency and significantly
+                    reduced carbon emissions. By maintaining consumption below 0.1 kW, household energy footprints are
+                    minimized.</p>
+                <p>This dashboard supports <strong>low-carbon awareness</strong> and encourages sustainable energy
+                    practices by highlighting optimal usage patterns observed in the Top 10 records of 2025.</p>
+                <div class="low-carbon-tag">Sustainability Verified</div>
+            </div>
+
+            <div class="disclaimer-card">
+                <div class="disclaimer-content">
+                    <span class="disclaimer-icon">ⓘ</span>
+                    <p class="disclaimer-text">
+                        Data presented in this dashboard is derived from real-world, verified electricity consumption
+                        records.
+                        The dataset has been cleaned, standardized, and analytically processed for sustainability
+                        assessment
+                        and visualization. All insights are intended for analytical, educational, and decision-support
+                        purposes.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Low-Carbon Case Study | Developed by MADHAN V M</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const dashboardData = [
+            { date: '2025-08-12', time: '19:26:00', power: 0.076, voltage: 236.5, sm1: 0.0, sm2: 0.0, sm3: 1.0 },
+            { date: '2025-08-28', time: '20:46:00', power: 0.076, voltage: 235.18, sm1: 0.0, sm2: 0.0, sm3: 0.0 },
+            { date: '2025-08-28', time: '20:47:00', power: 0.076, voltage: 235.4, sm1: 0.0, sm2: 0.0, sm3: 1.0 },
+            { date: '2025-08-28', time: '20:48:00', power: 0.076, voltage: 234.88, sm1: 0.0, sm2: 0.0, sm3: 1.0 },
+            { date: '2025-08-28', time: '20:51:00', power: 0.076, voltage: 234.03, sm1: 0.0, sm2: 0.0, sm3: 1.0 },
+            { date: '2025-08-28', time: '20:49:00', power: 0.076, voltage: 234.34, sm1: 0.0, sm2: 0.0, sm3: 0.0 },
+            { date: '2025-08-28', time: '20:50:00', power: 0.076, voltage: 234.06, sm1: 0.0, sm2: 0.0, sm3: 1.0 },
+            { date: '2025-08-28', time: '21:02:00', power: 0.076, voltage: 235.64, sm1: 0.0, sm2: 0.0, sm3: 1.0 },
+            { date: '2025-08-28', time: '20:52:00', power: 0.076, voltage: 233.92, sm1: 0.0, sm2: 0.0, sm3: 0.0 },
+            { date: '2025-08-28', time: '09:07:00', power: 0.078, voltage: 238.15, sm1: 0.0, sm2: 0.0, sm3: 0.0 }
+        ];
+
+        let charts = {};
+
+        function initCharts() {
+            const labels = dashboardData.map(d => `${d.date} ${d.time}`);
+            const primaryColor = '#1abc9c';
+            Object.values(charts).forEach(chart => chart.destroy());
+
+            charts.line = new Chart(document.getElementById('lineChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Global Active Power (kW)',
+                        data: dashboardData.map(d => d.power),
+                        borderColor: primaryColor,
+                        backgroundColor: 'rgba(26, 188, 156, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            charts.bar = new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Global Active Power (kW)',
+                        data: dashboardData.map(d => d.power),
+                        backgroundColor: primaryColor,
+                        borderRadius: 8
+                    }]
+                },
+                options: { responsive: true, indexAxis: 'y' }
+            });
+
+            charts.scatter = new Chart(document.getElementById('scatterPlot'), {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Usage Records',
+                        data: dashboardData.map(d => ({ x: d.voltage, y: d.power, label: `${d.date} ${d.time}` })),
+                        backgroundColor: '#2c3e50',
+                        pointRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `Date: ${c.raw.label} | Voltage: ${c.raw.x}V | Power: ${c.raw.y}kW`
+                            }
+                        }
+                    }
+                }
+            });
+
+            charts.stacked = new Chart(document.getElementById('stackedBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Kitchen (SM1)', data: dashboardData.map(d => d.sm1), backgroundColor: '#16a085' },
+                        { label: 'Laundry (SM2)', data: dashboardData.map(d => d.sm2), backgroundColor: '#1abc9c' },
+                        { label: 'Heater/AC (SM3)', data: dashboardData.map(d => d.sm3), backgroundColor: '#2ecc71' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { x: { stacked: true }, y: { stacked: true } }
+                }
+            });
+        }
+
+        function switchTab(tab, updateHistory = true) {
+            const homeView = document.getElementById('view-landing');
+            const dashboardView = document.getElementById('view-dashboard');
+
+            if (tab === 'dashboard') {
+                homeView.classList.add('hidden');
+                dashboardView.classList.remove('hidden');
+                initCharts();
+                if (updateHistory) history.pushState({ tab: 'dashboard' }, '', '#dashboard');
+            } else {
+                homeView.classList.remove('hidden');
+                dashboardView.classList.add('hidden');
+                if (updateHistory) history.pushState({ tab: 'landing' }, '', '#landing');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        window.onpopstate = (event) => {
+            if (event.state && event.state.tab) {
+                switchTab(event.state.tab, false);
+            } else {
+                // Default fallback
+                const hash = window.location.hash.replace('#', '');
+                switchTab(hash === 'dashboard' ? 'dashboard' : 'landing', false);
+            }
+        };
+
+        window.onload = () => {
+            const hash = window.location.hash.replace('#', '');
+            const initialTab = hash === 'dashboard' ? 'dashboard' : 'landing';
+            switchTab(initialTab, false);
+            // Replace initial state to enable popstate on first back
+            history.replaceState({ tab: initialTab }, '', `#${initialTab}`);
+        };
+    </script>
+</body>
+
+</html>

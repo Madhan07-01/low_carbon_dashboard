@@ -1,0 +1,20 @@
+[
+  {
+    "category": "Appliance-Level Transparency",
+    "recommendation": "Isolate Sub-Metering Zone 3 (Heater/AC) during low-voltage periods to maintain standard grid stability while reducing active power.",
+    "impact": "High",
+    "carbon_potential": "0.15 kg CO2/hr reduction"
+  },
+  {
+    "category": "Behavioral Shifting",
+    "recommendation": "Execute high-density laundry cycles (Zone 2) between 09:00 - 11:00 AM as per observed efficiency peaks in the 2025 dataset.",
+    "impact": "Medium",
+    "carbon_potential": "0.08 kg CO2/hr reduction"
+  },
+  {
+    "category": "Grid Intelligence",
+    "recommendation": "Maintain Global Active Power below the 0.08 kW threshold for standby devices to qualify for 'Carbon-Zero' household certification.",
+    "impact": "Critical",
+    "carbon_potential": "0.42 kg CO2/day reduction"
+  }
+]
