@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What-If Simulator | Low-Carbon Energy Analytics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>What-If AI Simulator | Low-Carbon Energy Analytics</title>
+    <meta name="description" content="AI-powered What-If Energy Impact Simulator using Google Gemini to generate real-time sustainability insights for residential energy modeling.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -13,27 +14,26 @@
             --primary: #2c3e50;
             --primary-light: #34495e;
             --accent: #1abc9c;
+            --accent-glow: rgba(26, 188, 156, 0.25);
             --bg: #f8faf8;
             --text-main: #1b2631;
             --text-muted: #5d6d7e;
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.5);
             --shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
             --card-accent: #f4f6f7;
+            --ai-gradient: linear-gradient(135deg, #1abc9c, #16a085);
+            --ai-badge-bg: linear-gradient(135deg, rgba(26, 188, 156, 0.15), rgba(22, 160, 133, 0.08));
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             background-image:
-                radial-gradient(at 0% 0%, rgba(44, 62, 80, 0.03) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(26, 188, 156, 0.03) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(44, 62, 80, 0.04) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(26, 188, 156, 0.05) 0px, transparent 50%);
             color: var(--text-main);
             min-height: 100vh;
             padding: 60px 20px;
@@ -42,14 +42,36 @@
             align-items: center;
         }
 
-        .container {
-            max-width: 1000px;
-            width: 100%;
+        .container { max-width: 1080px; width: 100%; }
+
+        header { text-align: center; margin-bottom: 50px; }
+
+        .ai-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--ai-badge-bg);
+            border: 1px solid rgba(26, 188, 156, 0.3);
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 50px;
+        .ai-status-dot {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
         }
 
         h1 {
@@ -78,38 +100,34 @@
 
         .simulator-grid {
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
+            grid-template-columns: 1fr 1.3fr;
             gap: 50px;
             align-items: start;
         }
 
         @media (max-width: 850px) {
-            .simulator-grid {
-                grid-template-columns: 1fr;
-            }
+            .simulator-grid { grid-template-columns: 1fr; }
         }
 
-        .control-section {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
+        .control-section { display: flex; flex-direction: column; gap: 28px; }
 
         .control-group label {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--primary);
+            font-size: 0.95rem;
         }
 
         .household-count-display {
-            background: var(--accent-color);
+            background: var(--accent);
             color: white;
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 700;
         }
 
         input[type="range"] {
@@ -125,40 +143,34 @@
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 22px; height: 22px;
             background: var(--accent);
             border: 3px solid white;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
             transition: transform 0.2s ease;
         }
 
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
 
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
+        .kpi-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 
         .kpi-card {
             background: var(--card-accent);
-            padding: 24px;
-            border-radius: 18px;
+            padding: 20px 24px;
+            border-radius: 16px;
             border: 1px solid rgba(45, 90, 39, 0.05);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .kpi-card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 188, 156, 0.1);
         }
 
         .kpi-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color: var(--text-muted);
@@ -167,7 +179,7 @@
         }
 
         .kpi-value {
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--primary);
             display: flex;
@@ -175,86 +187,210 @@
             gap: 6px;
         }
 
-        .unit {
-            font-size: 1rem;
-            font-weight: 400;
-            opacity: 0.7;
-        }
+        .unit { font-size: 0.95rem; font-weight: 400; opacity: 0.7; }
 
         .btn-simulate {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: var(--primary);
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(45, 90, 39, 0.2);
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn-simulate:hover {
             background: var(--primary-light);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(45, 90, 39, 0.3);
+            box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);
         }
 
-        .visual-section {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
+        .btn-simulate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
+
+        .visual-section { display: flex; flex-direction: column; gap: 24px; }
 
         .chart-box {
             background: white;
-            padding: 30px;
+            padding: 28px;
             border-radius: 20px;
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            height: 350px;
+            border: 1px solid rgba(0,0,0,0.04);
+            height: 300px;
             position: relative;
         }
+
+        /* AI Insight Panel */
+        .ai-insight-panel {
+            background: var(--ai-badge-bg);
+            border: 1px solid rgba(26, 188, 156, 0.25);
+            border-radius: 18px;
+            padding: 24px;
+            position: relative;
+            min-height: 100px;
+            transition: all 0.4s ease;
+        }
+
+        .ai-insight-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .ai-icon {
+            width: 32px; height: 32px;
+            background: var(--ai-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .ai-insight-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--accent);
+        }
+
+        .ai-insight-text {
+            font-size: 0.93rem;
+            color: var(--text-main);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .ai-insight-text p { margin-bottom: 8px; }
+        .ai-insight-text p:last-child { margin-bottom: 0; }
+
+        /* AI Loading Shimmer */
+        .ai-loading {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .ai-loading.active { display: flex; }
+
+        .shimmer-dots { display: flex; gap: 6px; }
+
+        .shimmer-dots span {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: shimmer-bounce 1.4s infinite ease-in-out both;
+        }
+
+        .shimmer-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .shimmer-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes shimmer-bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Error state */
+        .ai-error {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: rgba(231, 76, 60, 0.08);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 0.88rem;
+            color: #c0392b;
+        }
+
+        .ai-error.active { display: flex; }
 
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 30px;
+            margin-top: 8px;
             color: var(--primary);
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: opacity 0.2s ease;
         }
 
-        .back-link:hover {
-            opacity: 0.7;
-        }
+        .back-link:hover { opacity: 0.7; }
 
         .footer-note {
             text-align: center;
             margin-top: 40px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
-            opacity: 0.8;
+            opacity: 0.7;
         }
+
+        .api-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50px;
+            border: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+        }
+
+        .status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #95a5a6;
+            transition: background 0.3s ease;
+        }
+
+        .status-dot.connected { background: var(--accent); }
+        .status-dot.error { background: #e74c3c; }
     </style>
 </head>
 
 <body>
-
     <div class="container">
         <header class="branded-header">
-            <h1>What-If Energy Impact Simulator</h1>
-            <p class="subtitle" style="color: var(--text-main); font-weight: 500;">Estimating potential carbon reduction
-                through efficiency scaling</p>
+            <div class="ai-status-badge">
+                <div class="ai-status-dot"></div>
+                Google Gemini Flash AI · Live
+            </div>
+            <h1>What-If AI Energy Simulator</h1>
+            <p class="subtitle" style="color: var(--text-main); font-weight: 400;">
+                Real-time AI insights powered by Google Gemini — scaling carbon impact analysis
+            </p>
         </header>
 
         <div class="glass-panel">
             <div class="simulator-grid">
-                <!-- UI Elements: Controls and KPIs -->
+                <!-- Controls + KPIs -->
                 <div class="control-section">
+                    <div>
+                        <div class="api-status-bar">
+                            <div class="status-dot" id="apiDot"></div>
+                            <span id="apiStatusText">Connecting to Gemini AI...</span>
+                        </div>
+                    </div>
+
                     <div class="control-group">
                         <label for="householdSlider">
                             Number of Households
@@ -278,11 +414,16 @@
                         </div>
                     </div>
 
-                    <button class="btn-simulate" id="simulateBtn">Simulate Impact</button>
+                    <button class="btn-simulate" id="simulateBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        Run AI Simulation
+                    </button>
 
                     <a href="../hub.html#dashboard" class="back-link">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>
                         </svg>
@@ -290,50 +431,87 @@
                     </a>
                 </div>
 
-                <!-- Visual Output Section -->
+                <!-- Visual Output -->
                 <div class="visual-section">
                     <div class="chart-box">
                         <canvas id="impactChart"></canvas>
                     </div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; padding: 0 10px;">
-                        <p>This simulation demonstrates the scalability of identified low-carbon patterns. By adopting
-                            high-efficiency usage cycles across residential blocks, we can achieve significant
-                            industrial-scale emission reductions without sacrificing essential utility.</p>
+
+                    <!-- AI Insight Panel -->
+                    <div class="ai-insight-panel" id="aiInsightPanel">
+                        <div class="ai-insight-header">
+                            <div class="ai-icon">🤖</div>
+                            <div class="ai-insight-title">Gemini AI Analysis</div>
+                        </div>
+
+                        <div class="ai-loading" id="aiLoading">
+                            <div class="shimmer-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span>Gemini is analyzing your simulation...</span>
+                        </div>
+
+                        <div class="ai-error" id="aiError">
+                            ⚠️ <span id="aiErrorText">AI insight unavailable. Check connection.</span>
+                        </div>
+
+                        <div class="ai-insight-text" id="aiInsightText">
+                            <p style="color: var(--text-muted); font-style: italic;">
+                                Adjust households and click <strong>Run AI Simulation</strong> to receive Gemini-powered insights on your energy impact.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="footer-note">
-            Sustainability Decision-Support Module | Built for Academic & Evaluation Purposes
+            AI-Powered Sustainability Decision-Support Module · Google Gemini Flash AI · India Grid Standard (0.82 kg CO₂/kWh)
         </div>
     </div>
 
-    <!-- Integration Logic -->
+    <!-- AI Engine + Simulator Logic -->
+    <script src="../logic/gemini_ai_engine.js"></script>
     <script src="../logic/what_if_simulator.js"></script>
     <script>
         let impactChart;
+        let aiDebounceTimer = null;
 
-        async function init() {
-            // Initialize from CSV data source
-            await window.SimulatorLogic.initializeBaseline();
-
-            setupChart();
-            runSimulation();
+        // --- API Status UI ---
+        async function checkAPIStatus() {
+            const dot = document.getElementById('apiDot');
+            const statusText = document.getElementById('apiStatusText');
+            try {
+                const res = await window.GeminiAI.validateAPIConnection();
+                const ok = typeof res === 'object' ? res.ok : Boolean(res);
+                if (ok) {
+                    dot.className = 'status-dot connected';
+                    statusText.textContent = 'Gemini Flash AI · Connected & Live';
+                } else {
+                    dot.className = 'status-dot error';
+                    statusText.textContent = 'Gemini AI · Standby / High Demand';
+                }
+            } catch (e) {
+                dot.className = 'status-dot error';
+                statusText.textContent = 'Gemini AI · Connection Error';
+            }
         }
 
+        // --- Chart Setup ---
         function setupChart() {
             const ctx = document.getElementById('impactChart').getContext('2d');
             impactChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Monthly CO₂ Reduction'],
+                    labels: ['Monthly CO₂ Reduction (kg)'],
                     datasets: [{
                         label: 'Reduction (kg)',
                         data: [0],
-                        backgroundColor: '#1abc9c',
-                        borderRadius: 12,
-                        barThickness: 60
+                        backgroundColor: 'rgba(26, 188, 156, 0.85)',
+                        borderColor: '#1abc9c',
+                        borderWidth: 2,
+                        borderRadius: 14,
+                        barThickness: 70
                     }]
                 },
                 options: {
@@ -343,7 +521,7 @@
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                label: (context) => `Reduction: ${context.raw.toFixed(2)} kg`
+                                label: (ctx) => `CO₂ Reduction: ${ctx.raw.toFixed(2)} kg/month`
                             }
                         }
                     },
@@ -351,7 +529,7 @@
                         y: {
                             beginAtZero: true,
                             title: { display: true, text: 'CO₂ Impact (kg)', color: '#4a5a4a' },
-                            grid: { color: 'rgba(0,0,0,0.05)' }
+                            grid: { color: 'rgba(0,0,0,0.04)' }
                         },
                         x: { display: false }
                     }
@@ -359,39 +537,89 @@
             });
         }
 
+        // --- Core Simulation (Math) ---
         function runSimulation() {
             const households = parseInt(document.getElementById('householdSlider').value);
             document.getElementById('countDisplay').innerText = households;
-
-            // Core calculation logic from logic/what_if_simulator.js
             const results = window.SimulatorLogic.calculateImpact(households);
-
-            // Update KPI Cards with 2-decimal precision
-            document.getElementById('valAvgPower').innerHTML = `${results.avgPower.toFixed(2)} <span class="unit">kW</span>`;
+            document.getElementById('valAvgPower').innerHTML = `${results.avgPower.toFixed(4)} <span class="unit">kW</span>`;
             document.getElementById('valEnergy').innerHTML = `${results.totalEnergy.toFixed(2)} <span class="unit">kWh</span>`;
             document.getElementById('valCO2').innerHTML = `${results.co2Reduction.toFixed(2)} <span class="unit">kg</span>`;
-
-            // Update Visualization
             if (impactChart) {
                 impactChart.data.datasets[0].data = [results.co2Reduction];
-                impactChart.update();
+                impactChart.update('active');
+            }
+            return results;
+        }
+
+        // --- AI Insight Generation ---
+        async function runAISimulation() {
+            const btn = document.getElementById('simulateBtn');
+            const loading = document.getElementById('aiLoading');
+            const errorEl = document.getElementById('aiError');
+            const textEl = document.getElementById('aiInsightText');
+
+            // Visual feedback
+            const panel = document.querySelector('.glass-panel');
+            panel.style.transition = 'opacity 0.1s ease';
+            panel.style.opacity = '0.75';
+            setTimeout(() => { panel.style.opacity = '1'; }, 120);
+
+            const results = runSimulation();
+            const households = parseInt(document.getElementById('householdSlider').value);
+
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = `<span style="display:flex;gap:6px;align-items:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                Gemini Analyzing...
+            </span>`;
+            loading.classList.add('active');
+            errorEl.classList.remove('active');
+            textEl.style.display = 'none';
+
+            try {
+                const insight = await window.GeminiAI.generateSimulationInsight(households, results);
+                loading.classList.remove('active');
+                textEl.style.display = 'block';
+                textEl.innerHTML = insight;
+            } catch (err) {
+                console.warn('Gemini AI simulation failed, generating local data-backed insight:', err);
+                loading.classList.remove('active');
+
+                const treesEquiv = Math.max(1, Math.round(results.co2Reduction / 21));
+                const carKmEquiv = Math.round(results.co2Reduction * 4.1);
+
+                textEl.style.display = 'block';
+                textEl.innerHTML = `
+                    <div style="background: rgba(241, 196, 15, 0.1); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 10px; padding: 8px 14px; font-size: 0.8rem; color: #b78103; margin-bottom: 12px; font-weight: 500;">
+                        ⚡ Local Sustainability Projection (Gemini API standby)
+                    </div>
+                    <p>Scaling high-efficiency patterns across <strong>${households} households</strong> achieves a projected monthly CO₂ reduction of <strong>${results.co2Reduction.toFixed(2)} kg</strong> based on an average efficient power draw of ${results.avgPower.toFixed(4)} kW per household.</p>
+                    <p>This environmental abatement is equivalent to planting approximately <strong>${treesEquiv} mature trees</strong> annually or eliminating <strong>${carKmEquiv.toLocaleString()} km</strong> of gasoline vehicle travel each month.</p>
+                    <p><strong>Next Step:</strong> Deploy demand-response scheduling and encourage automated off-peak cooling cycles across the community to sustain this efficiency baseline.</p>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg> Run AI Simulation`;
             }
         }
 
-        // Event Listeners for immediate feedback
-        document.getElementById('householdSlider').addEventListener('input', runSimulation);
-        document.getElementById('simulateBtn').addEventListener('click', () => {
-            // Visual feedback for intentional simulation
-            const panel = document.querySelector('.glass-panel');
-            panel.style.transition = 'opacity 0.1s ease';
-            panel.style.opacity = '0.7';
-            setTimeout(() => {
-                runSimulation();
-                panel.style.opacity = '1';
-            }, 100);
+        // --- Event Listeners ---
+        document.getElementById('householdSlider').addEventListener('input', () => {
+            runSimulation(); // instant math update
         });
 
-        // Initialize Module
+        document.getElementById('simulateBtn').addEventListener('click', runAISimulation);
+
+        // --- Init ---
+        async function init() {
+            await window.SimulatorLogic.initializeBaseline();
+            setupChart();
+            runSimulation();
+            checkAPIStatus(); // async, non-blocking
+        }
+
         init();
     </script>
 </body>
